@@ -65,12 +65,21 @@ public class UI {
             System.out.print("-"+ ANSI_RESET);
         }
       else {
-        if (piece.getColor() == Color.WHITE) {
-          System.out.print(ANSI_WHITE + ANSI_BLACK_BACKGROUND + piece + ANSI_RESET);
-        }
-        else {
-          System.out.print(ANSI_BLACK + ANSI_WHITE_BACKGROUND + piece + ANSI_RESET);
-        }
+				if (background) {
+					if (piece.getColor() == Color.WHITE) {
+						System.out.print(ANSI_WHITE + piece + ANSI_RESET);
+					}
+					else {
+						System.out.print(ANSI_BLACK + piece + ANSI_RESET);
+					}
+				} else {
+					if (piece.getColor() == Color.WHITE) {
+						System.out.print(ANSI_WHITE + ANSI_BLACK_BACKGROUND + piece + ANSI_RESET);
+					}
+					else {
+						System.out.print(ANSI_BLACK + ANSI_WHITE_BACKGROUND + piece + ANSI_RESET);
+					}
+				}
       }
       System.out.print(" ");
 	}

@@ -1,6 +1,7 @@
 package chess.pieces;
 
 import boardGame.Board;
+import boardGame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
@@ -13,6 +14,11 @@ public class King extends ChessPiece {
   @Override
   public String toString(){
     return "K";
+  }
+
+  private boolean canMove(Position position){
+    ChessPiece p = (ChessPiece) getBoard().piece(position);
+    return p == null || p.getColor() != getColor();
   }
 
   @Override

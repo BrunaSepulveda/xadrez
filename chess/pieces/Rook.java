@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import boardGame.Board;
 import boardGame.Position;
+import chess.ChessException;
 import chess.ChessPiece;
 import chess.Color;
 
@@ -18,49 +19,52 @@ public class Rook extends ChessPiece {
 		return "R";
 	}
 
-	private ArrayList<int[]> straightMotion(boolean isItInTheColumn, boolean isItSum, Position currentPosition){
-		ArrayList<int[]> positionsBoo = new ArrayList<int[]>();
+	private ArrayList<Position> straightMotion(boolean isItInTheColumn, int increment, Position currentPosition) throws ChessException {
+		ArrayList<Position> positionsBoo = new ArrayList<>();
+		if (Math.abs(increment) > 1) {
+			throw new ChessException("A torre se movimenta de um em um apenas");
+		}
 		if (isItInTheColumn) {
-			currentPosition.setValues(position.getRow(), position.getColumn() + (isItSum ? 1 : -1));
+			currentPosition.setValues(position.getRow(), position.getColumn() + increment);
 		} else {
-			currentPosition.setValues(position.getRow() + (isItSum ? 1 : -1), position.getColumn());
+			currentPosition.setValues(position.getRow() + increment, position.getColumn());
 		}
 			while (getBoard().positionExists(currentPosition) && !getBoard().thereIsAPiece(currentPosition)) {
-				int [] truePositon = {currentPosition.getRow(), currentPosition.getColumn()};
+				Position truePositon = new Position(currentPosition.getRow(), currentPosition.getColumn());
 				positionsBoo.add(truePositon);
 				if (isItInTheColumn) {
-					currentPosition.setColumn(currentPosition.getColumn() + (isItSum ? 1 : -1));
+					currentPosition.setColumn(currentPosition.getColumn() + increment);
 				} else {
-					currentPosition.setRow(currentPosition.getRow()  + (isItSum ? 1 : -1));
+					currentPosition.setRow(currentPosition.getRow()  + increment);
 				}
 			}
 			if (getBoard().positionExists(currentPosition) && isThereOpponentPiece(currentPosition)) {
-				int [] truePositon = {currentPosition.getRow(), currentPosition.getColumn()};
+				Position truePositon = new Position(currentPosition.getRow(), currentPosition.getColumn());
 				positionsBoo.add(truePositon);
 			}
 			return positionsBoo;
 	}
 
 	@Override
-	public boolean[][] possibleMoves() {
+	public boolean[][] possibleMoves() throws ChessException {
 		boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
 		Position p = new Position(0, 0);
-		ArrayList<int[]> allPossibleMoves = new ArrayList<>();
+		ArrayList<Position> allPossibleMoves = new ArrayList<>();		
 		//above
-		ArrayList<int[]> abovePositions =  straightMotion(false,false,p);
+		ArrayList<Position> abovePositions =  straightMotion(false,-1,p);
 		allPossibleMoves.addAll(abovePositions);
 		//left
-		ArrayList<int[]> leftPositions = straightMotion(true,false,p);
+		ArrayList<Position> leftPositions = straightMotion(true,-1,p);
 		allPossibleMoves.addAll(leftPositions);
 		//right
-		ArrayList<int[]> rightPositions = straightMotion(true,true,p);
+		ArrayList<Position> rightPositions = straightMotion(true,1,p);
 		allPossibleMoves.addAll(rightPositions);
 		//below
-		ArrayList<int[]> belowPositions = straightMotion(false,true,p);
+		ArrayList<Position> belowPositions = straightMotion(false,1,p);
 		allPossibleMoves.addAll(belowPositions);
-
-		for (int[] positionTrue : allPossibleMoves) {
-			mat[positionTrue[0]][positionTrue[1]] = true;
+	
+		for (Position positionTrue : allPossibleMoves) {
+			mat[positionTrue.getRow()][positionTrue.getColumn()] = true;
 		}
 		return mat;
 	}
