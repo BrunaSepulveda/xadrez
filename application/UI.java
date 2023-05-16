@@ -41,14 +41,20 @@ public class UI {
 	}
 
 	public static void printMatch(ChessMatch chessMatch, List<ChessPiece> captured){
+		String currentPlayerPt = ((chessMatch.getCurrentPlayer()== Color.WHITE)? "branca" : "preta");
 		printBoard(chessMatch.getPieces());
 		System.out.println();
 		printCapturedPieces(captured);
 		System.out.println();
 		System.out.println("Turno: "+ chessMatch.getTurn());
-		System.out.println("Aguardando jogada das peças de cor " + ((chessMatch.getCurrentPlayer()== Color.WHITE)? "Branca" : "Preta"));
-		if (chessMatch.getCheck()) {
-			System.out.println("Jogador atual está em CHEQUE!");
+		if (!chessMatch.getCheckMate()) {
+			System.out.println("Aguardando jogada das peças de cor " + currentPlayerPt);
+			if (chessMatch.getCheck()) {
+				System.out.println("Peças de cor " + currentPlayerPt +" estão em CHEQUE!");
+			}
+		} else {
+			System.out.println("Chequemate!");
+			System.out.println("AS peças de cor " + currentPlayerPt + " venceram!");
 		}
 	}
 	
