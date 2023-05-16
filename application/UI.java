@@ -47,6 +47,9 @@ public class UI {
 		System.out.println();
 		System.out.println("Turno: "+ chessMatch.getTurn());
 		System.out.println("Aguardando jogada das peças de cor " + ((chessMatch.getCurrentPlayer()== Color.WHITE)? "Branca" : "Preta"));
+		if (chessMatch.getCheck()) {
+			System.out.println("Jogador atual está em CHEQUE!");
+		}
 	}
 	
 	public static void printBoard(ChessPiece[][] pieces) {
