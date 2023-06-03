@@ -38,7 +38,7 @@ public class Rook extends ChessPiece {
 					currentPosition.setRow(currentPosition.getRow()  + increment);
 				}
 			}
-			if (getBoard().positionExists(currentPosition) && isThereOpponentPiece(currentPosition)) {
+			if (canCaptureOpponentPiece(currentPosition)) {
 				Position truePositon = new Position(currentPosition.getRow(), currentPosition.getColumn());
 				positionsBoo.add(truePositon);
 			}
