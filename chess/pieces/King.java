@@ -1,6 +1,5 @@
 package chess.pieces;
 
-
 import boardGame.Board;
 import boardGame.Position;
 import chess.ChessMatch;
@@ -30,10 +29,6 @@ public class King extends ChessPiece {
 		ChessPiece p = (ChessPiece)getBoard().piece(position);
 		return p != null && p instanceof Rook && p.getColor() == getColor() && p.getMoveCount() == 0;
 	}
-
-  private boolean moveKing(Position position) {
-    return getBoard().positionExists(position) && canMove(position);
-  }  
 	
 	@Override
 	public boolean[][] possibleMoves() {
@@ -43,37 +38,51 @@ public class King extends ChessPiece {
 		
 		// above
 		p.setValues(position.getRow() - 1, position.getColumn());
-		mat[p.getRow()][p.getColumn()] = moveKing(p);
+		if (getBoard().positionExists(p) && canMove(p)) {
+			mat[p.getRow()][p.getColumn()] = true;
+		}
 
 		// below
 		p.setValues(position.getRow() + 1, position.getColumn());
-		mat[p.getRow()][p.getColumn()] = moveKing(p);
+		if (getBoard().positionExists(p) && canMove(p)) {
+			mat[p.getRow()][p.getColumn()] = true;
+		}
 
 		// left
 		p.setValues(position.getRow(), position.getColumn() - 1);
-		mat[p.getRow()][p.getColumn()] = moveKing(p);
-		
+		if (getBoard().positionExists(p) && canMove(p)) {
+			mat[p.getRow()][p.getColumn()] = true;
+		}
 
 		// right
 		p.setValues(position.getRow(), position.getColumn() + 1);
-		mat[p.getRow()][p.getColumn()] = moveKing(p);
+		if (getBoard().positionExists(p) && canMove(p)) {
+			mat[p.getRow()][p.getColumn()] = true;
+		}
 
 		// nw
 		p.setValues(position.getRow() - 1, position.getColumn() - 1);
-		mat[p.getRow()][p.getColumn()] = moveKing(p);
+		if (getBoard().positionExists(p) && canMove(p)) {
+			mat[p.getRow()][p.getColumn()] = true;
+		}
 
 		// ne
 		p.setValues(position.getRow() - 1, position.getColumn() + 1);
-		mat[p.getRow()][p.getColumn()] = moveKing(p);
+		if (getBoard().positionExists(p) && canMove(p)) {
+			mat[p.getRow()][p.getColumn()] = true;
+		}
 
 		// sw
 		p.setValues(position.getRow() + 1, position.getColumn() - 1);
-		mat[p.getRow()][p.getColumn()] = moveKing(p);
+		if (getBoard().positionExists(p) && canMove(p)) {
+			mat[p.getRow()][p.getColumn()] = true;
+		}
 		
 		// se
 		p.setValues(position.getRow() + 1, position.getColumn() + 1);
-		mat[p.getRow()][p.getColumn()] = moveKing(p);
-		
+		if (getBoard().positionExists(p) && canMove(p)) {
+			mat[p.getRow()][p.getColumn()] = true;
+		}
 
 		// #specialmove castling
 		if (getMoveCount() == 0 && !chessMatch.getCheck()) {
