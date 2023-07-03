@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,7 @@ public class ChessMatch {
 	private boolean check;
 	private boolean checkMate;
 	private ChessPiece enPassantVulnerable;
-
+	private ChessPiece promoted;
 
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPieces = new ArrayList<>();
@@ -53,6 +54,10 @@ public class ChessMatch {
 	public ChessPiece getEnPassantVulnerable() {
 		return enPassantVulnerable;
 	}
+
+	public ChessPiece getPromoted() {
+		return promoted;
+	}
 	
 	public ChessPiece[][] getPieces() {
 		ChessPiece[][] mat = new ChessPiece[board.getRows()][board.getColumns()];
@@ -69,6 +74,48 @@ public class ChessMatch {
 		validateSourcePosition(position);
 		return board.piece(position).possibleMoves();
 	}
+
+	private ChessPiece newPiece(String type, Color color){
+		ChessPiece piece;
+		switch (type) {
+			case "B":
+				piece = new Bishop(board, color);
+				break;
+			case "N":
+				piece = new Knight(board, color);
+				break;
+			case "R":
+				piece = new Rook(board, color);
+				break;
+			case "Q":
+				piece = new Queen(board, color);
+				break;
+			default:
+				piece = null;
+				break;
+		}
+		return piece;
+	}
+	
+	public ChessPiece replacePromotedPiece(String pieceLetter){
+		ArrayList<String> validLetters = new ArrayList<>(Arrays.asList("B", "N", "R", "Q"));
+		if (this.promoted == null) {
+			throw new IllegalStateException("Não há peça para ser promovida");
+		}
+		if (!validLetters.contains(pieceLetter)) {
+			return this.promoted;
+		}
+
+		Position pos = this.promoted.getChessPosition().toPosition();
+		Piece p = board.removePiece(pos);
+		piecesOnTheBoard.remove(p);
+
+		ChessPiece newPiece = this.newPiece(pieceLetter, this.promoted.getColor());
+		board.placePiece(newPiece, pos);
+		piecesOnTheBoard.add(newPiece);
+
+		return newPiece;
+	}
 	
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
 		Position source = sourcePosition.toPosition();
@@ -83,7 +130,20 @@ public class ChessMatch {
 		}
 
 		ChessPiece movedPiece = (ChessPiece) board.piece(target);
-		
+
+		// movimento de promoção
+		this.promoted = null;
+		boolean finalPawnMovimentWhite = movedPiece.getColor() == Color.WHITE && target.getRow() == 0;
+		boolean finalPawnMovimentBlack = movedPiece.getColor() == Color.BLACK && target.getRow() == 7;
+
+		if (movedPiece instanceof Pawn) {
+			if (finalPawnMovimentWhite || finalPawnMovimentBlack) {
+				this.promoted = (ChessPiece) board.piece(target);
+				this.promoted = this.replacePromotedPiece("Q");
+			}
+			
+		}
+
 		check = (testCheck(opponent(currentPlayer))) ? true : false;
 
 		if (testCheckMate(opponent(currentPlayer))) {

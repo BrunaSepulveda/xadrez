@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -35,6 +36,17 @@ public class Program {
 
 				if (capturedPiece != null) {
 					captured.add(capturedPiece);
+				}
+
+				if (chessMatch.getPromoted() != null) {
+					System.out.print("Entre com a peça para a promoção (B/N/R/Q): ");
+					String type = sc.nextLine().toUpperCase();
+					ArrayList<String> validLetters = new ArrayList<>(Arrays.asList("B", "N", "R", "Q"));
+					while(!validLetters.contains(type)){
+						System.out.print("Valor inválido! Entre com a peça para a promoção (B/N/R/Q): ");	
+						type = sc.nextLine().toUpperCase();
+					}
+					chessMatch.replacePromotedPiece(type);
 				}
 			}
 			catch (ChessException e) {
